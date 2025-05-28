@@ -1736,7 +1736,8 @@ exports.findAllCompanies = async (req, res) => {
         hourly_rate,
         profileUrl 
       FROM companies 
-        AND (is_active IS NULL OR is_active = true)
+      WHERE
+       (is_active IS NULL OR is_active = true)
         AND verified = true;
     `;
 
