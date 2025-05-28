@@ -81,11 +81,9 @@ exports.generateInvoicePDF = async (
 	const browser = await puppeteer.launch({
 		args: chromium.args,
 		defaultViewport: chromium.defaultViewport,
-		executablePath: isDev
-		? undefined // Let Puppeteer use local Chromium
-		: await chromium.executablePath, // Use AWS Lambda-compatible Chromium on Vercel
-		headless: chromium.headless,
-		ignoreHTTPSErrors: true
+		executablePath: await chromium.executablePath || null,
+		headless: true, // should always be true in Vercel
+		ignoreHTTPSErrors: true,
 	});
 
 	const page = await browser.newPage();
