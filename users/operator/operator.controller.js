@@ -1736,19 +1736,6 @@ exports.findAllCompanies = async (req, res) => {
         hourly_rate,
         profileUrl 
       FROM companies 
-      WHERE 
-        NOT EXISTS (
-          SELECT 1 
-          FROM drives 
-          WHERE company_id = companies.id 
-            AND status IN ('ongoing', 'scheduled', 'offer sent')
-        )
-        AND EXISTS (
-          SELECT 1 
-          FROM drivers 
-          WHERE company_id = companies.id 
-            AND is_active = true 
-        )
         AND (is_active IS NULL OR is_active = true)
         AND verified = true;
     `;
