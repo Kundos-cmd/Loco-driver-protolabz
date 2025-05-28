@@ -1308,12 +1308,12 @@ exports.insertInvoice = async (req, res)=> {
 
       notify(OperatorSubscriberId, `/operator/invoices/detail-invoice/${result.insertId}`, body);
 
-      const invoicePdf = await generateInvoicePDF(values, result.insertId, cashierInfo, customerInfo)
-      console.log("Generated Invoice PDF:", invoicePdf);
+      // const invoicePdf = await generateInvoicePDF(values, result.insertId, cashierInfo, customerInfo)
+      // console.log("Generated Invoice PDF:", invoicePdf);
       
       const emailData = {
         invoiceId: result.insertId,
-        pdfPath: invoicePdf,
+        url: `${process.env.REACT_APP_URL}/operator/invoices/detail-invoice/${result.insertId}`,
         total:
           invoice_detail[0].price +
           (invoice_detail[0].price * tax) / 100 +

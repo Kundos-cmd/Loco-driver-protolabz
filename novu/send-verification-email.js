@@ -108,6 +108,7 @@ async function sendInvoiceEmail(email, data, name){
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="https://res.cloudinary.com/dugjfejkq/image/upload/v1747901250/header-logo_xjwgdw_4_ikjzzn.png" alt="LocoDriver Logo" style="height: 60px;" />
         </div>
+        <a href="${data.url}" style="background-color: #1294FF; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Invoice</a>
         <h2 style="color: #1294FF;">Your LocoDriver Invoice</h2>
         <p>Hi ${name || 'Customer'},</p>
         <p>Please find your invoice details below:</p>
@@ -117,13 +118,6 @@ async function sendInvoiceEmail(email, data, name){
         <p>Stay safe,<br>LocoDriver Billing Team</p>
       </div>
       `,
-      attachments: [
-        {
-          filename: `invoice-${data.invoiceId}.pdf`,
-          path: data.pdfPath,
-          contentType: "application/pdf",
-        },
-      ],
     };
     // 3. Send mail
     const info = await transporter.sendMail(mailOptions);
