@@ -1,0 +1,303 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; }
+    h1, h2 { margin: 0; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    td, th { padding: 8px; border: 1px solid #ddd; }
+    .dateContainer{
+		display: flex;
+		justify-content: end;
+		column-gap: 10px;
+	}
+
+	.fromContainer p, .toContainer p {
+		margin-block: 5px;
+	}
+
+	.footer { 
+		margin-top: 40px; font-size: 0.9em; color: #555;
+	}
+
+	table{
+		margin-top: 10px;
+	}
+
+	table td{
+		text-align: center;
+	}
+
+	.title{
+		margin-top: 10px;
+	}
+	.usersContainer{
+		display: flex;
+		justify-content: space-between;
+		margin-top: 20px;
+	}
+
+  </style>
+</head>
+<body>
+  <h1>Invoice #{{invoiceId}}</h1>
+  <div class="dateContainer">
+	<p><strong>Date:</strong> {{date}}</p>
+	<p><strong>Due Date:</strong> {{dueDate}}</p>
+  </div>
+
+  <div class="usersContainer">
+	<div class="fromContainer">
+		<h2>From</h2>
+		<p>{{cashierName}}<br>{{cashierEmail}}</p>
+	</div>
+
+	<div class="toContainer">
+		<h2>To</h2>
+		<p>{{customerName}}<br>{{customerEmail}}</p>
+	</div>
+  </div>
+
+  <h2 class="title">Invoice Details</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{itemName}}</td>
+        <td>{{amount}}</td>
+      </tr>
+      <tr>
+        <td>Platform Charge</td>
+        <td>{{platformCharge}}</td>
+      </tr>
+      <tr>
+        <td>Tax</td>
+        <td>{{tax}}</td>
+      </tr>
+      <tr>
+        <td>Additional Cost</td>
+        <td>{{additional_cost}}</td>
+      </tr>
+      <tr>
+        <td>Discount</td>
+        <td>{{discount}}</td>
+      </tr>
+      <tr>
+        <th>Total</th>
+        <th>{{total}}</th>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <p><strong>Notes:</strong> {{notes}}</p>
+    <p><strong>Terms:</strong> {{terms}}</p>
+  </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; }
+    h1, h2 { margin: 0; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    td, th { padding: 8px; border: 1px solid #ddd; }
+
+    .headerSection{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .statusBadge{
+      color: #107d4f;
+      background-color: #c0e5d980;
+      border-color: #6bc2a5;
+      padding: 5px 10px;
+      border-radius: 10px;
+      display: inline-block;
+      position: relative;
+      bottom: 16px;
+      left: 10px;
+    }
+
+    .userInfoSection {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .fromSection {
+        border: 1px solid #f2f2f2;
+        padding: 15px;
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .toSection {
+        border: 1px solid #f2f2f2;
+        padding: 15px;
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .fromSection h2, .toSection h2 {
+      font-size: 18px;
+    }
+
+    .fromContainer{
+      font-size: 15px;
+    }
+
+    .lightText{
+      margin: 0;
+      font-size: 0.875rem;
+      line-height: 1.57;
+      font-family: Inter var;
+      font-weight: 400;
+      color: #5B6B79;
+    }
+
+    .infoSection{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .calculationSection{
+      display: flex;
+      justify-content: end;
+      margin-top: 25px;
+    }
+
+    thead{
+      display: table-header-group;
+      background-color: #F8F9FA;
+      border-top: 1px solid rgba(219, 224, 229, 0.65);
+      border-bottom: 2px solid rgba(219, 224, 229, 0.65);
+    }
+
+    thead th{
+      font-size: 0.875rem;
+    }
+
+    tbody td{
+      font-size: 0.875rem;
+      color: #5B6B79;
+      text-align: center;
+    }
+
+    .innerCalSection{
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .m-0{
+      margin: 0;
+      font-size: 15px;
+    }
+
+    h5{
+      margin: 0;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="headerSection">
+    <div class="logoSection">
+      <img src="https://res.cloudinary.com/dugjfejkq/image/upload/v1747901250/header-logo_xjwgdw_4_ikjzzn.png" width="250" height="50" alt="logo">
+      <span class="statusBadge">{{status}}</span>
+      <p class="lightText"><strong>#{{invoiceId}}</strong></p>
+    </div>
+
+    <div class="dateSection">
+      <p><Strong>Date</Strong> {{date}} </p>
+      <p><Strong>Due Date</Strong> {{dueDate}} </p>
+    </div>
+  </div>
+
+  <div class="userInfoSection">
+    <div class="fromSection">
+      <h2>From: </h2>
+      <div class="fromContainer">
+        <p><strong>{{cashierName}}</strong></p>
+        <p class="lightText">{{cashierEmail}}</p>
+      </div>
+    </div>
+
+    <div class="toSection">
+      <h2>To: </h2>
+      <div class="fromContainer">
+        <p><strong>{{customerName}}</strong></p>
+        <p class="lightText">{{customerEmail}}</p>
+      </div>
+    </div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>{{itemName}}</td>
+        <td>{{amount}}</td>
+        <td>{{amount}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="calculationSection">
+    <div class="innerCalSection">
+      <div class="infoSection">
+        <p class="lightText">Sub Total</p>
+        <h5>{{amount}}</h5>
+      </div>
+      <div class="infoSection">
+        <p class="lightText">Discount</p>
+        <h5>{{discount}}</h5>
+      </div>
+      <div class="infoSection">
+        <p class="lightText">Tax</p>
+        <h5>{{tax}}</h5>
+      </div>
+      <div class="infoSection">
+        <p class="lightText">Platform Commission</p>
+        <h5>{{platformCharge}}</h5>
+      </div>
+      <div class="infoSection">
+        <p class="lightText">Additional Cost</p>
+        <h5>{{additional_cost}}</h5>
+      </div>
+      <div class="infoSection">
+        <p class="m-0"><strong>Grand Total:</strong></p>
+        <h5>{{total}}</h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="footerSection">
+    <p class="notes">Notes: {{terms}}</p>
+    <p class="terms">Terms: {{terms}}</p>
+  </div>
+</body>
+</html>
+
