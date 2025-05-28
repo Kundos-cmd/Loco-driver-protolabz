@@ -9,7 +9,7 @@ const dotenv = require("dotenv");
 const createNovuSubscriber = require("../../novu/create-subscriber");
 const { sendResetEmail } = require("../../novu/send-verification-email");
 const { sendInvoiceEmail } = require("../../novu/send-verification-email");
-const  { generateInvoicePDF }  = require("../../utils/invoicePdfGenerator");
+// const  { generateInvoicePDF }  = require("../../utils/invoicePdfGenerator");
 dotenv.config();
 
 const {
@@ -1383,11 +1383,11 @@ exports.sendInvoice = async (req, res) => {
 
     notify(OperatorSubscriberId, `/operator/invoices/detail-invoice/${data.id}`, body);
 
-    const invoicePdf = await generateInvoicePDF(values, data.id, cashierInfo, customerInfo);
+    // const invoicePdf = await generateInvoicePDF(values, data.id, cashierInfo, customerInfo);
 
     const emailData = {
       invoiceId: data.id,
-      pdfPath: invoicePdf,
+      url: `${process.env.REACT_APP_URL}/operator/invoices/detail-invoice/${result.insertId}`,
       total:
         data.amount +
         (data.amount * (data.tax || 0)) / 100 +
