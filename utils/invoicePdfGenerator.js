@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
+const chromium = require("chrome-aws-lambda");
+// const puppeteer = require("puppeteer");
 
 function injectTemplateVars(html, data) {
   return html.replace(/{{(.*?)}}/g, (_, key) => data[key.trim()] || '');
@@ -73,7 +75,15 @@ exports.generateInvoicePDF = async (
 		status: values[4]
 	});
 
-	const browser = await puppeteer.launch();
+	// const browser = await puppeteer.launch();
+	const browser = await puppeteer.launch({
+		args: chromium.args,
+		defaultViewport: chromium.defaultViewport,
+		executablePath: await chromium.executablePath || '/usr/bin/chromium-browser',
+		headless: chromium.headless,
+		ignoreHTTPSErrors: true
+	});
+	
 	const page = await browser.newPage();
 
 	await page.setContent(html, { waitUntil: "networkidle0" });
