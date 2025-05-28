@@ -1387,7 +1387,7 @@ exports.sendInvoice = async (req, res) => {
 
     const emailData = {
       invoiceId: data.id,
-      url: `${process.env.REACT_APP_URL}/operator/invoices/detail-invoice/${result.insertId}`,
+      url: `${process.env.REACT_APP_URL}/operator/invoices/detail-invoice/${data.id}`,
       total:
         data.amount +
         (data.amount * (data.tax || 0)) / 100 +
