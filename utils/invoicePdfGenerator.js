@@ -83,12 +83,12 @@ exports.generateInvoicePDF = async (
 		headless: chromium.headless,
 		ignoreHTTPSErrors: true
 	});
-	
+
 	const page = await browser.newPage();
 
 	await page.setContent(html, { waitUntil: "networkidle0" });
 
-	const pdfPath = path.join(__dirname, `../invoices/invoice-${invoiceId}.pdf`);
+	const pdfPath = path.join('/tmp', `invoice-${invoiceId}.pdf`);
 	await page.pdf({
 		path: pdfPath,
 		format: "A4",
