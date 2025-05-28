@@ -75,11 +75,15 @@ exports.generateInvoicePDF = async (
 		status: values[4]
 	});
 
-	// const browser = await puppeteer.launch();
+	 // Detect if running locally (Vercel sets AWS_REGION in production)
+	const isDev = !process.env.AWS_REGION;
+
 	const browser = await puppeteer.launch({
 		args: chromium.args,
 		defaultViewport: chromium.defaultViewport,
-		executablePath: await chromium.executablePath || '/usr/bin/chromium-browser',
+		executablePath: isDev
+		? undefined // Let Puppeteer use local Chromium
+		: await chromium.executablePath, // Use AWS Lambda-compatible Chromium on Vercel
 		headless: chromium.headless,
 		ignoreHTTPSErrors: true
 	});
