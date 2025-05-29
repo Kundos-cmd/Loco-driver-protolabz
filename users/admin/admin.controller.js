@@ -1343,6 +1343,62 @@ exports.insertInvoice = async (req, res)=> {
   }
 }
 
+exports.saveInvoice = async (req, res)=> {
+  try {
+    
+    const {discount, platform_charge, date, due_date, tax, status, cashierInfo, customerInfo, invoice_detail, notes, terms, driveId, additional_cost} = req.body;
+
+    if (!date || !due_date || !status || !invoice_detail || !customerInfo || !cashierInfo || !platform_charge || !driveId) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const input = date;
+    const [month, day, year] = input.split('/');
+    const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+    const due_date_input = due_date;
+    const [due_month, due_day, due_year] = due_date_input.split('/');
+    const formattedDueDate = `${due_year}-${due_month.padStart(2, '0')}-${due_day.padStart(2, '0')}`;
+
+    const query =  `INSERT INTO invoices (created_at, updated_at, due_date, label, status, drive_id, company_id, operator_id, notes, terms, amount, tax, platform_charge, discount, additional_cost) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    `;
+
+    const values = [
+      formattedDate,
+      formattedDate, 
+      formattedDueDate, 
+      invoice_detail[0].name,
+      status,
+      driveId, 
+      cashierInfo.id, 
+      customerInfo.id,
+      notes,
+      terms,
+      invoice_detail[0].price,
+      tax || 19,
+      platform_charge || 0,
+      discount || 0,
+      additional_cost || 0
+    ]
+    
+
+    const result = await queryAsync(query, values);
+
+    if (result) {
+      return res.status(200).json({
+        message: "Invoice inserted successfully",
+        invoiceId: result.insertId,
+      });
+    }
+
+    console.log("Insert Invoice Request Body:", req.body);
+
+  } catch (error) {
+    console.error("Error executing query: " + error.stack);
+    res.status(500).json({ error: "Error updating invoice and drive" });
+  }
+}
+
 exports.sendInvoice = async (req, res) => {
   try {
     const data = req.body.invoice;
