@@ -100,7 +100,7 @@ async function sendVerificationEmail(email, link, name) {
 
 async function sendInvoiceEmail(email, data, name){
   const mailOptions = {
-      from: `"Your Company Name" <${process.env.EMAIL_USER}>`,
+      from: `"Loco Driver" <${process.env.SMTP_USER}>`,
       to: email,
       subject: `Invoice #${data.invoiceId} from Your Company`,
       html: `
@@ -108,12 +108,13 @@ async function sendInvoiceEmail(email, data, name){
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="https://res.cloudinary.com/dugjfejkq/image/upload/v1747901250/header-logo_xjwgdw_4_ikjzzn.png" alt="LocoDriver Logo" style="height: 60px;" />
         </div>
-        <a href="${data.url}" style="background-color: #1294FF; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Invoice</a>
         <h2 style="color: #1294FF;">Your LocoDriver Invoice</h2>
         <p>Hi ${name || 'Customer'},</p>
         <p>Please find your invoice details below:</p>
         <p><strong>Invoice Amount:</strong> $${data.total}</p>
         <p><strong>Due Date:</strong> ${data.dueDate}</p>
+        <p>Click on the following button to check your invoice.</p>
+        <a href="${data.url}" style="background-color: #1294FF; color: #fff; padding: 12px 24px; text-decoration: none; margin-bottom:5px; border-radius: 6px; display: inline-block;">View Invoice</a>
         <p>Thank you for your business and continued support!</p>
         <p>Stay safe,<br>LocoDriver Billing Team</p>
       </div>
