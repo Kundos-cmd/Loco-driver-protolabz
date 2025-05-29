@@ -1737,8 +1737,8 @@ exports.findAllCompanies = async (req, res) => {
         profileUrl 
       FROM companies 
       WHERE
-       (is_active IS NULL OR is_active = true)
-        AND verified = true;
+       (is_active IS NULL OR is_active = 1)
+        AND verified = 'true';
     `;
 
     // Execute the query using queryAsync
