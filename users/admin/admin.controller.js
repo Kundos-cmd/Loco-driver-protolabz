@@ -491,13 +491,13 @@ exports.getUserStats = async (req, res) => {
     // Query to get the total number of companies
     const companiesCountQuery = `
       SELECT COUNT(*) AS companies_count
-      FROM companies;
+      FROM companies WHERE (is_active IS NULL OR is_active = true);
     `;
 
     // Query to get the total number of operators
     const operatorsCountQuery = `
       SELECT COUNT(*) AS operators_count
-      FROM operators;
+      FROM operators WHERE (is_active IS NULL OR is_active = true);
     `;
 
     // Execute the queries
