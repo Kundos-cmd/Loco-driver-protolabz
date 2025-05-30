@@ -1263,9 +1263,9 @@ exports.addInvoice = async (req, res) => {
 exports.insertInvoice = async (req, res)=> {
   try {
 
-    const {discount, platform_charge, date, due_date, tax, status, cashierInfo, customerInfo, invoice_detail, notes, terms, driveId, additional_cost} = req.body;
+    const {discount, platform_charge, date, due_date, tax, status, cashierInfo, customerInfo, invoice_detail, notes, terms, driveId, additional_cost, invoice_id} = req.body;
 
-    if (!date || !due_date || !status || !invoice_detail || !customerInfo || !cashierInfo || !platform_charge || !driveId) {
+    if (!date || !due_date || !status || !invoice_detail || !customerInfo || !cashierInfo || !platform_charge || !driveId || !invoice_id) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -1276,8 +1276,8 @@ exports.insertInvoice = async (req, res)=> {
     const due_date_input = due_date;
     const [due_month, due_day, due_year] = due_date_input.split('/');
     const formattedDueDate = `${due_year}-${due_month.padStart(2, '0')}-${due_day.padStart(2, '0')}`;
-
-    const query =  `INSERT INTO invoices (created_at, updated_at, due_date, label, status, drive_id, company_id, operator_id, notes, terms, amount, tax, platform_charge, discount, additional_cost) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    const invoiceSno = parseInt(invoice_id.split('-').reverse()[0]);
+    const query =  `INSERT INTO invoices (created_at, updated_at, due_date, label, status, drive_id, company_id, operator_id, notes, terms, amount, tax, platform_charge, discount, additional_cost, invoice_id, invoice_sno) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `;
 
     const values = [
@@ -1295,7 +1295,9 @@ exports.insertInvoice = async (req, res)=> {
       tax || 19,
       platform_charge || 0,
       discount || 0,
-      additional_cost || 0
+      additional_cost || 0,
+      invoice_id,
+      invoiceSno
     ]
     
 
@@ -1346,9 +1348,9 @@ exports.insertInvoice = async (req, res)=> {
 exports.saveInvoice = async (req, res)=> {
   try {
     
-    const {discount, platform_charge, date, due_date, tax, status, cashierInfo, customerInfo, invoice_detail, notes, terms, driveId, additional_cost} = req.body;
+    const {discount, platform_charge, date, due_date, tax, status, cashierInfo, customerInfo, invoice_detail, notes, terms, driveId, additional_cost, invoice_id} = req.body;
 
-    if (!date || !due_date || !status || !invoice_detail || !customerInfo || !cashierInfo || !platform_charge || !driveId) {
+    if (!date || !due_date || !status || !invoice_detail || !customerInfo || !cashierInfo || !platform_charge || !driveId || !invoice_id) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -1359,8 +1361,8 @@ exports.saveInvoice = async (req, res)=> {
     const due_date_input = due_date;
     const [due_month, due_day, due_year] = due_date_input.split('/');
     const formattedDueDate = `${due_year}-${due_month.padStart(2, '0')}-${due_day.padStart(2, '0')}`;
-
-    const query =  `INSERT INTO invoices (created_at, updated_at, due_date, label, status, drive_id, company_id, operator_id, notes, terms, amount, tax, platform_charge, discount, additional_cost) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    const invoiceSno = parseInt(invoice_id.split('-').reverse()[0]);
+    const query =  `INSERT INTO invoices (created_at, updated_at, due_date, label, status, drive_id, company_id, operator_id, notes, terms, amount, tax, platform_charge, discount, additional_cost, invoice_id, invoice_sno) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `;
 
     const values = [
@@ -1378,7 +1380,9 @@ exports.saveInvoice = async (req, res)=> {
       tax || 19,
       platform_charge || 0,
       discount || 0,
-      additional_cost || 0
+      additional_cost || 0,
+      invoice_id,
+      invoiceSno
     ]
     
 
@@ -1396,6 +1400,23 @@ exports.saveInvoice = async (req, res)=> {
   } catch (error) {
     console.error("Error executing query: " + error.stack);
     res.status(500).json({ error: "Error updating invoice and drive" });
+  }
+}
+
+exports.getLastInvoiceId = async (req, res) => {
+  try {
+    const query = `SELECT invoice_sno FROM invoices ORDER BY id DESC LIMIT 1`;
+    const result = await queryAsync(query);
+    
+    if (result.length > 0) {
+      res.status(200).json({ lastInvoiceId: result[0].invoice_sno });
+    } else {
+      res.status(404).json({ message: "No invoices found." });
+    }
+  
+  } catch (error) {
+    console.error("Error executing query: " + error.stack);
+    res.status(500).json({ error: "Error fetching last invoice ID" });
   }
 }
 
@@ -1482,6 +1503,8 @@ exports.updateInvoiceAndDrivePayment = async (req, res) => {
     platform_charge,
     operator_payment_date,
     discount,
+    notes,
+    terms
   } = req.body;
 
   // Check if essential fields are present
@@ -1537,6 +1560,14 @@ exports.updateInvoiceAndDrivePayment = async (req, res) => {
   if (operator_payment_date) {
     updateInvoiceQuery += `, operator_payment_date = ?`;
     invoiceValues.push(operator_payment_date);
+  }
+  if (notes) {
+    updateInvoiceQuery += `, notes = ?`;
+    invoiceValues.push(notes);
+  }
+  if (terms) {
+    updateInvoiceQuery += `, terms = ?`;
+    invoiceValues.push(terms);
   }
 
   updateInvoiceQuery += ` WHERE id = ?`;

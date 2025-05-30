@@ -2260,6 +2260,11 @@ exports.addInvoice = async (req, res) => {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
+  const result = await queryAsync(`SELECT invoice_sno FROM invoices ORDER BY id DESC LIMIT 1`);
+  const invoice_sno = result.length > 0 ? result[0].invoice_sno + 1 : null;
+  const date = new Date();
+  const invoiceId = `LD-${date.getMonth() + 1}-${date.getFullYear()}-${invoice_sno}`;
+
   const invoiceCredentialQuery = `SELECT value FROM invoice_credentials WHERE name = ?`;
 
   const invoiceCredentialResult = await queryAsync(invoiceCredentialQuery, ["tax"]);
@@ -2293,8 +2298,8 @@ exports.addInvoice = async (req, res) => {
       // If the invoice doesn't exist, create a new one
       const insertQuery = `
         INSERT INTO invoices 
-        (created_at, updated_at, drive_id, company_id, operator_id, amount, platform_charge) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        (created_at, updated_at, drive_id, company_id, operator_id, amount, platform_charge, invoice_id, invoice_sno) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       const insertValues = [
         created_at,
@@ -2304,6 +2309,8 @@ exports.addInvoice = async (req, res) => {
         operator_id,
         amount,
         platform_charge,
+        invoiceId,
+        invoice_sno,
       ];
 
       const results = await queryAsync(insertQuery, insertValues);

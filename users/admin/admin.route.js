@@ -65,6 +65,7 @@ router.get("/get-recent-invoices", admins.getRecentInvoices);
 router.post("/add-invoice", admins.addInvoice);
 router.post("/insert-invoice", verifyToken, admins.insertInvoice);
 router.post("/save-invoice", verifyToken, admins.saveInvoice);
+router.get('/get-last-invoice-id', admins.getLastInvoiceId);
 router.post("/send-invoice", admins.sendInvoice);
 router.delete("/delete-invoice/:id", admins.deleteInvoice);
 router.put("/update-invoice/:id", admins.updateInvoiceAndDrivePayment);
