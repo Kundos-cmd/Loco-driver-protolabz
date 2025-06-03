@@ -2251,7 +2251,7 @@ exports.resetPassword = async (req, res) => {
       sendResetEmail(
         email,
         `${process.env.REACT_APP_URL}/admin/reset-password/${email}?t=${token}`,
-        sId
+        result[0].name,
       );
       console.log("email sent");
       res.send({ message: "Reset Email Sent Successfully" });
